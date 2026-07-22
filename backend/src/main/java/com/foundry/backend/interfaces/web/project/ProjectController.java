@@ -22,9 +22,9 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<ProjectResponse> create(@RequestBody CreateProjectRequest request) {
-        CreateProjectCommand command = new CreateProjectCommand(request.name(), request.description());
+    
 
-        Project created = createProjectUseCase.execute(command);
+        Project created = createProjectUseCase.execute(new CreateProjectCommand(request.name(), request.description(), request.githubRepositoryUrl()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ProjectResponse.from(created));
     }

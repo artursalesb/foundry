@@ -1,10 +1,8 @@
 package com.foundry.backend.domain.project;
 
-/**
- * Lançada quando uma tentativa de criar ou modificar um Project
- * viola as invariantes da entidade.
- */
-public class InvalidProjectException extends RuntimeException {
+import com.foundry.backend.domain.DomainException;
+
+public class InvalidProjectException extends DomainException {
 
     public InvalidProjectException(String message) {
         super(message);

@@ -14,7 +14,7 @@ public class CreateProjectUseCase {
     }
 
     public Project execute(CreateProjectCommand command) {
-        Project project = Project.create(command.name(), command.description());
+        Project project = Project.create(command.name(), command.description(), command.githubRepositoryUrl());
 
         return projectRepository.save(project);
     }

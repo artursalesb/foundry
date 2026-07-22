@@ -4,6 +4,7 @@ import com.foundry.backend.application.project.CreateProjectCommand;
 import com.foundry.backend.application.project.CreateProjectUseCase;
 import com.foundry.backend.domain.project.InvalidProjectException;
 import com.foundry.backend.domain.project.Project;
+import com.foundry.backend.interfaces.web.GlobalExceptionHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,7 +18,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProjectController.class)
+@org.springframework.context.annotation.Import(GlobalExceptionHandler.class)
 class ProjectControllerTest {
+
+    private static final String VALID_REPOSITORY = "foundry-org/foundry";
 
     @Autowired
     private MockMvc mockMvc;
@@ -27,16 +31,17 @@ class ProjectControllerTest {
 
     @Test
     void shouldReturn201WhenProjectIsCreatedSuccessfully() throws Exception {
-        Project project = Project.create("Foundry", "Backlog de evolução");
+        Project project = Project.create("Foundry", "Backlog de evolução", VALID_REPOSITORY);
         when(createProjectUseCase.execute(any(CreateProjectCommand.class))).thenReturn(project);
 
         mockMvc.perform(post("/api/v1/projects")
                         .contentType("application/json")
                         .content("""
-                                {"name": "Foundry", "description": "Backlog de evolução"}
+                                {"name": "Foundry", "description": "Backlog de evolução", "githubRepositoryUrl": "foundry-org/foundry"}
                                 """))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("Foundry"));
+                .andExpect(jsonPath("$.name").value("Foundry"))
+                .andExpect(jsonPath("$.githubRepository").value("foundry-org/foundry"));
     }
 
     @Test
@@ -47,7 +52,7 @@ class ProjectControllerTest {
         mockMvc.perform(post("/api/v1/projects")
                         .contentType("application/json")
                         .content("""
-                                {"name": "", "description": "desc"}
+                                {"name": "", "description": "desc", "githubRepositoryUrl": "foundry-org/foundry"}
                                 """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("O nome do projeto não pode ser vazio."));
