@@ -1,4 +1,4 @@
-package test.java.com.foundry.backend;
+package com.foundry.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

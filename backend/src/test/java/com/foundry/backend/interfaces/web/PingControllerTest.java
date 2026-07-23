@@ -1,4 +1,4 @@
-package test.java.com.foundry.backend.interfaces.web;
+package com.foundry.backend.interfaces.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
