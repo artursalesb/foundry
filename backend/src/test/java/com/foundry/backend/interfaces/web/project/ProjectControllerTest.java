@@ -2,6 +2,7 @@ package com.foundry.backend.interfaces.web.project;
 
 import com.foundry.backend.application.project.CreateProjectCommand;
 import com.foundry.backend.application.project.CreateProjectUseCase;
+import com.foundry.backend.application.project.ListProjectsUseCase;
 import com.foundry.backend.domain.project.InvalidProjectException;
 import com.foundry.backend.domain.project.Project;
 import com.foundry.backend.interfaces.web.GlobalExceptionHandler;
@@ -16,10 +17,14 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @WebMvcTest(ProjectController.class)
 @org.springframework.context.annotation.Import(GlobalExceptionHandler.class)
+ @MockBean
+
 class ProjectControllerTest {
+    private ListProjectsUseCase listProjectsUseCase;
 
     private static final String VALID_REPOSITORY = "foundry-org/foundry";
 
@@ -56,5 +61,15 @@ class ProjectControllerTest {
                                 """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("O nome do projeto não pode ser vazio."));
+    }
+    @Test
+   
+    void shouldReturnAllProjectsOnList() throws Exception {
+        Project project = Project.create("Foundry", "desc", VALID_REPOSITORY);
+        when(listProjectsUseCase.execute()).thenReturn(java.util.List.of(project));
+
+        mockMvc.perform(get("/api/v1/projects"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("Foundry"));
     }
 }

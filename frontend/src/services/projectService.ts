@@ -30,3 +30,13 @@ export async function createProject(input: CreateProjectInput): Promise<Project>
 
   return response.json();
 }
+
+export async function listProjects(): Promise<Project[]> {
+  const response = await fetch(`${API_BASE_URL}/api/v1/projects`);
+
+  if (!response.ok) {
+    throw new ApiError('Não foi possível carregar os projetos.');
+  }
+
+  return response.json();
+}

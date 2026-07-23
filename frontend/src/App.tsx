@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { checkBackendHealth } from './services/healthCheckService';
 import { CreateProjectForm } from './components/CreateProjectForm';
+import { listProjects } from './services/projectService';
 import type { Project } from './services/projectService';
+
 type ConnectionStatus = 'checking' | 'connected' | 'error';
 
 function App() {
@@ -12,6 +14,12 @@ function App() {
     checkBackendHealth()
       .then(() => setStatus('connected'))
       .catch(() => setStatus('error'));
+  }, []);
+
+  useEffect(() => {
+    listProjects()
+      .then(setProjects)
+      .catch(() => setProjects([]));
   }, []);
 
   function handleProjectCreated(project: Project) {
@@ -25,7 +33,7 @@ function App() {
 
       <CreateProjectForm onProjectCreated={handleProjectCreated} />
 
-      <h2>Projetos criados nesta sessão</h2>
+      <h2>Projetos</h2>
       <ul>
         {projects.map((project) => (
           <li key={project.id}>

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
 
 /**
  * Implementação em memória de ProjectRepository, usada enquanto a
@@ -28,5 +29,9 @@ public class InMemoryProjectRepository implements ProjectRepository {
     @Override
     public Optional<Project> findById(UUID id) {
         return Optional.ofNullable(storage.get(id));
+    }
+    @Override
+    public List<Project> findAll() {
+        return List.copyOf(storage.values());
     }
 }
