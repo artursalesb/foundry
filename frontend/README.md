@@ -1,75 +1,77 @@
-# React + TypeScript + Vite
+# Foundry
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![CI](https://github.com/artursalesb/foundry/actions/workflows/ci.yml/badge.svg)
 
-Currently, two official plugins are available:
+> Uma plataforma que analisa a estrutura real de um repositório e transforma lacunas de
+> engenharia (testes, CI/CD, containerização, documentação) em um backlog de evolução
+> priorizado e acionável — não apenas mais um gerenciador de tarefas.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Por que o Foundry existe
 
-## React Compiler
+Ferramentas como Jira, Trello e Linear tratam tarefas como dados isolados, desconectados
+do estado real do código. O Foundry inverte essa lógica: usa a estrutura real do
+repositório (via GitHub) como fonte de verdade, e transforma lacunas objetivas de
+engenharia — ausência de testes, CI, containerização, documentação — em um plano de
+evolução priorizado.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Não é um clone de ferramenta de gestão de projeto. É uma ferramenta de diagnóstico e
+evolução de engenharia de software.
 
-## Expanding the ESLint configuration
+## Status do projeto
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+🚧 Em desenvolvimento ativo. Já implementado:
+- Criação e listagem de projetos, com repositório GitHub associado
+- Arquitetura em camadas (Clean Architecture), com testes automatizados end-to-end
+- Pipeline de CI rodando testes de backend e frontend a cada push
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Em construção: motor de detecção de lacunas de engenharia e geração de backlog.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+<!-- TODO: adicionar GIF ou screenshot demonstrando o fluxo de criação de projeto -->
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Stack
 
+- **Backend**: Java 21, Spring Boot, Maven
+- **Frontend**: React, TypeScript, Vite
+- **Testes**: JUnit 5 + AssertJ (backend), Vitest + Testing Library (frontend)
+- **Banco de dados**: PostgreSQL (planejado — atualmente persistência em memória)
+- **CI/CD**: GitHub Actions
+
+## Como rodar localmente
+
+### Backend
+```bash
+cd backend
+./mvnw spring-boot:run
+```
+API disponível em `http://localhost:8080`.
+
+### Frontend
+```bash
+cd frontend
+cp .env.example .env
+npm install
+npm run dev
+```
+Aplicação disponível em `http://localhost:5173`.
+
+### Rodando os testes
+```bash
+# Backend
+cd backend && ./mvnw test
+
+# Frontend
+cd frontend && npm test
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Estrutura do repositório
+backend/ # API e regras de negócio (Java / Spring Boot, Clean Architecture)
+frontend/ # Interface (React / TypeScript)
+docs/adr/ # Registros de decisões arquiteturais (Architecture Decision Records)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Decisões arquiteturais
 
-```
+Todas as decisões técnicas relevantes — e os trade-offs considerados em cada uma — estão
+documentadas em [`docs/adr/`](./docs/adr/), seguindo o formato de Architecture Decision
+Records. Vale a leitura para entender o raciocínio por trás da arquitetura, não só o
+resultado final.
