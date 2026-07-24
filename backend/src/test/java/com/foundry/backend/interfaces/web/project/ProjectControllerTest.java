@@ -21,9 +21,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @WebMvcTest(ProjectController.class)
 @org.springframework.context.annotation.Import(GlobalExceptionHandler.class)
- @MockBean
+ 
 
 class ProjectControllerTest {
+    @MockBean
     private ListProjectsUseCase listProjectsUseCase;
 
     private static final String VALID_REPOSITORY = "foundry-org/foundry";
